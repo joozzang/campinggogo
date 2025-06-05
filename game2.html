@@ -1,14 +1,258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CAMPING !</title>
-    <link rel="icon" href="./favicon.ico" />
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>네 글자 단어 (앞 두 글자만)</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      @font-face {
+        font-family: "CookieRun-Regular";
+        src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff")
+          format("woff");
+        font-weight: normal;
+        font-style: normal;
+      }
+      body {
+        font-family: "CookieRun-Regular";
+        background: linear-gradient(135deg, #2c64ff, #759aff);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .word-display {
+        font-size: 8rem;
+        font-weight: bold;
+        margin-bottom: 50px;
+        padding: 80px;
+        background-color: #eef3ff;
+        border-radius: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        min-width: 400px;
+        text-align: center;
+      }
+
+      /* 숫자 선택 버튼 모양 */
+      .number-button {
+        font-size: 3rem;
+        padding: 35px 80px;
+        margin: 0 10px 40px 10px;
+        border-radius: 10px;
+        border: none;
+        background-color: #1976d2;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .number-button:hover {
+        background-color: #115293;
+      }
+
+      .next-button,
+      .restart-button {
+        position: fixed;
+        bottom: 15px;
+        right: 20px;
+        border-radius: 15px;
+        padding: 20px 30px;
+        font-size: 2rem;
+        background-color: #fff;
+        color: gray;
+        border: none;
+        cursor: pointer;
+      }
+      .next-button:hover,
+      .restart-button:hover {
+        background-color: #ddd;
+      }
+
+      .home-button {
+        position: fixed;
+        bottom: 15px;
+        left: 20px;
+        padding: 10px 20px;
+        font-size: 3rem;
+        background-color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .home-button:hover {
+        background-color: #1976d2;
+        color: white;
+      }
+
+      /* 숫자 버튼 컨테이너 */
+      #numberButtons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+      }
+    </style>
   </head>
   <body>
-    <div class="container"></div>
-    <script src="script.js"></script>
+    <a href="start.html" class="home-button">🏠</a>
+
+    <div id="numberButtons">
+      <button class="number-button" onclick="startGame(3)">3</button>
+      <button class="number-button" onclick="startGame(5)">5</button>
+      <button class="number-button" onclick="startGame(7)">7</button>
+      <button class="number-button" onclick="startGame(10)">10</button>
+    </div>
+
+    <div class="word-display" id="wordDisplay"></div>
+
+    <button
+      id="nextBtn"
+      class="next-button"
+      onclick="showNextWord()"
+      style="display: none"
+    >
+      ▶︎
+    </button>
+    <button
+      id="restartBtn"
+      class="restart-button"
+      onclick="restartGame()"
+      style="display: none"
+    >
+      ⭐️
+    </button>
+
+    <script>
+      const wordList = [
+        "도원결의",
+        "치즈버거",
+        "누네띠네",
+        "어장관리",
+        "카페베네",
+        "브로콜리",
+        "초코파이",
+        "된장찌개",
+        "삼각김밥",
+        "서울특별시",
+        "호랑나비",
+        "개미핥기",
+        "현장학습",
+        "신용카드",
+        "마요네즈",
+        "플라밍고",
+        "딱따구리",
+        "감자튀김",
+        "업데이트",
+        "비트코인",
+        "아이스크림",
+        "바나나킥",
+        "하와이안",
+        "딸기우유",
+        "레몬에이드",
+      ];
+
+      let selectedCount = 0;
+      let currentIndex = 0;
+      let currentRound = 0;
+      const maxRounds = 3;
+
+      let remainingIndexes = [];
+      let currentRoundWords = [];
+
+      const wordDisplay = document.getElementById("wordDisplay");
+      const nextBtn = document.getElementById("nextBtn");
+      const restartBtn = document.getElementById("restartBtn");
+      const numberButtons = document.getElementById("numberButtons");
+
+      // 처음엔 숫자 버튼만 보이고, 텍스트는 빈 상태
+      wordDisplay.textContent = "";
+
+      // 배열 섞기 함수
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function startGame(count) {
+        selectedCount = count;
+        currentIndex = 0;
+        currentRound = 0;
+
+        remainingIndexes = [];
+        for (let i = 0; i < wordList.length; i++) {
+          remainingIndexes.push(i);
+        }
+        shuffleArray(remainingIndexes);
+
+        numberButtons.style.display = "none";
+        nextBtn.style.display = "inline-block";
+        restartBtn.style.display = "none";
+
+        wordDisplay.textContent = "시작해볼까?";
+      }
+      function showNextWord() {
+        // 첫 클릭 시 '시작해볼까?' -> 다음 클릭부터 단어 출력
+        if (wordDisplay.textContent === "시작해볼까?") {
+          wordDisplay.textContent = "";
+          currentRoundWords = remainingIndexes.splice(0, selectedCount);
+          currentIndex = 0;
+          currentRound++;
+          return;
+        }
+
+        // 단어 다 보여주고 다음 클릭에 문구 출력하는 상태인지 체크
+        if (currentIndex === currentRoundWords.length) {
+          // "뒤에 끝.ᐟ" 보여주기
+          wordDisplay.textContent = "게임 종료!";
+          currentIndex++; // 다음 클릭에 다음 라운드 넘어가도록 인덱스 증가
+          return;
+        }
+
+        // 문구 다 보여준 후 다음 클릭 시 다음 라운드 준비
+        if (currentIndex === currentRoundWords.length + 1) {
+          if (currentRound >= maxRounds || remainingIndexes.length === 0) {
+            wordDisplay.textContent = "게임 종료!";
+            nextBtn.style.display = "none";
+            restartBtn.style.display = "inline-block";
+          } else {
+            currentRoundWords = remainingIndexes.splice(0, selectedCount);
+            currentIndex = 0;
+            currentRound++;
+            wordDisplay.textContent = "시작해볼까?";
+          }
+          return;
+        }
+
+        // 단어 출력
+        const word = wordList[currentRoundWords[currentIndex]];
+        wordDisplay.textContent = word.slice(0, 2);
+        currentIndex++;
+      }
+
+      function restartGame() {
+        // selectedCount 유지
+        currentIndex = 0;
+        currentRound = 0;
+
+        remainingIndexes = [];
+        for (let i = 0; i < wordList.length; i++) {
+          remainingIndexes.push(i);
+        }
+        shuffleArray(remainingIndexes);
+
+        currentRoundWords = [];
+        wordDisplay.textContent = "시작해볼까?";
+        numberButtons.style.display = "none";
+        nextBtn.style.display = "inline-block";
+        restartBtn.style.display = "none";
+      }
+    </script>
   </body>
 </html>

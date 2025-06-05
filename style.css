@@ -20,7 +20,11 @@ body {
 }
 
 .container {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -37,7 +41,7 @@ body {
 .title {
   font-family: "DungGeunMo";
   font-size: 18rem;
-  color: #f0f6ff;
+  color: #ffffff;
   display: inline-block;
   white-space: nowrap; /* 한 줄로 유지 */
   overflow: hidden;
@@ -58,20 +62,19 @@ body {
   display: inline-block;
   padding: 30px 150px;
   font-size: 6rem;
-  background-color: #5c92c4;
   transform: translateY(20px);
-  color: #374151;
   text-decoration: none;
   border-radius: 30px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.5s ease;
   animation: pulse 1.8s infinite;
 }
-
-/* 보이도록 하는 클래스 */
 .show-button {
   opacity: 1;
   pointer-events: auto;
+  animation: slideUp 1s ease-out forwards, pulse 2.5s infinite;
+  animation-delay: 0s, 1.6s; /* slideUp 즉시 시작, pulse는 slideUp 끝나고 0.6초 후 */
+  animation-fill-mode: forwards;
 }
 
 .start-button:hover {
@@ -100,17 +103,36 @@ body {
   }
 }
 
+@keyframes slideFadeUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @keyframes pulse {
   0%,
   100% {
     transform: scale(1);
-    background-color: #ffff05; /* 선명한 레몬 옐로우 */
-    color: #374151; /* 진한 그레이(글자색) */
+    background: linear-gradient(
+      135deg,
+      #ffff05,
+      #f3f393
+    ); /* 선명한 레몬 옐로우 */
+    color: #2187cf; /* 진한 그레이(글자색) */
   }
   50% {
     transform: scale(1.05);
-    background-color: #ffff05; /* 선명한 레몬 옐로우 */
-    color: #374151; /* 진한 그레이(글자색) */
+    background: linear-gradient(
+      135deg,
+      #ffff05,
+      #f3f393
+    ); /* 선명한 레몬 옐로우 */
+    color: #2187cf; /* 진한 그레이(글자색) */
   }
 }
 
@@ -132,4 +154,85 @@ body {
   50% {
     border-color: transparent;
   }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 60px; /* 버튼 사이 간격 */
+  animation: fadeIn 1.2s ease-out;
+}
+.logo-wrapper {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* h1과 gif 사이 간격 */
+}
+
+/* 타이핑 애니메이션 */
+.logo {
+  font-family: "DungGeunMo";
+  font-size: 12rem;
+  color: #ffffff;
+  white-space: nowrap; /* 한 줄로 유지 */
+}
+
+.logo-gif {
+  width: 120px; /* GIF 크기 조절 */
+  height: 120px;
+  rotate: 180deg;
+}
+.game-button {
+  font-family: "DungGeunMo";
+  border: 2px solid #fff;
+  background-color: #b7f4b7;
+  color: #2187cf;
+  padding: 40px 150px;
+  font-size: 7rem;
+  text-decoration: none;
+  flex-direction: row;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(50px);
+  animation: slideFadeUp 0.8s ease forwards;
+}
+
+.game-button:hover {
+  transform: scale(1.05);
+  background-color: #ffff80;
+  box-shadow: 0 8px 20px rgba(208, 237, 170, 0.5);
+}
+
+/* 등장 애니메이션 순차 적용 */
+.game-button:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.game-button:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.game-button:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.game-button:nth-child(4) {
+  animation-delay: 0.8s;
+}
+.game-button:nth-child(5) {
+  animation-delay: 1s;
 }

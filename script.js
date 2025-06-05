@@ -2,7 +2,7 @@
 setTimeout(() => {
   const title = document.querySelector(".title");
   title.style.borderRight = "none";
-}, 3000); // 타이핑 애니메이션 시간과 동일
+}, 3500); // 타이핑 애니메이션 시간과 동일
 
 const title = document.querySelector(".title");
 const startBtn = document.querySelector(".start-button");
@@ -11,4 +11,4 @@ const startBtn = document.querySelector(".start-button");
 // 끝난 후 버튼 보이도록 2초 뒤 실행
 setTimeout(() => {
   startBtn.classList.add("show-button");
-}, 3200); // 타이핑 애니메이션 지속 시간과 동일하게 설정
+}, 4200); // 타이핑 애니메이션 지속 시간과 동일하게 설정

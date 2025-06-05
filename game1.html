@@ -5,9 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CAMPING !</title>
     <link rel="icon" href="./favicon.ico" />
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* 전체 초기화 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      @font-face {
+        font-family: "CookieRun-Regular";
+        src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff")
+          format("woff");
+        font-weight: normal;
+        font-style: normal;
+      }
+      body {
+        font-family: "CookieRun-Regular";
+        margin: 0;
+      }
+
+      .container {
+        background: linear-gradient(135deg, #e3ff2c, #bfecc4);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .image-container img {
+        width: 800px;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .next-button,
+      .restart-button {
+        position: fixed;
+        bottom: 15px;
+        right: 20px;
+        border-radius: 15px;
+        padding: 20px 30px;
+        font-size: 2rem;
+        background-color: #39d73e;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .next-button:hover,
+      .restart-button:hover {
+        background-color: #45a049;
+      }
+
+      .home-button {
+        position: fixed;
+        bottom: 15px;
+        left: 20px;
+        padding: 10px 20px;
+        font-size: 3rem;
+        background-color: #39d73e;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .home-button:hover {
+        background-color: #1976d2;
+      }
+
+      .setup-screen {
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+        align-items: center; /* 가로 가운데 정렬 */
+        justify-content: center; /* 세로 가운데 정렬 */
+        height: 100vh;
+        gap: 20px;
+        background: linear-gradient(135deg, #e3ff2c, #bfecc4);
+      }
+
+      /* 숫자 버튼 스타일 */
+      .number-button {
+        font-size: 6rem;
+        padding: 50px 100px;
+        margin: 10px 0;
+        background-color: #39d73e;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .number-button:hover {
+        background-color: #388e3c;
+      }
+
+      .message-text {
+        background-color: #39d73e;
+        position: fixed;
+        font-size: 5rem;
+        width: 800px;
+        margin: 20px;
+        text-align: center;
+        color: #fff;
+      }
+    </style>
   </head>
   <body>
-    <div class="container"></div>
+    <div id="setup-screen" class="setup-screen">
+      <!-- 숫자 입력 대신 버튼 3개 -->
+      <div>
+        <button class="number-button" onclick="startSlideshow(5)">5</button>
+        <button class="number-button" onclick="startSlideshow(7)">7</button>
+        <button class="number-button" onclick="startSlideshow(10)">10</button>
+      </div>
+    </div>
+
+    <div id="slideshow" class="container" style="display: none">
+      <div class="image-container">
+        <img id="camping-image" src="" alt="Camping Image" />
+      </div>
+      <div id="message" class="message-text"></div>
+      <button id="nextBtn" class="next-button" onclick="showNextImage()">
+        ▶︎
+      </button>
+      <button
+        id="restartBtn"
+        class="restart-button"
+        onclick="startRemaining()"
+        style="display: none"
+      >
+        ⭐️
+      </button>
+      <a href="start.html" class="home-button">🏠</a>
+    </div>
+
+    <script>
+      const totalImages = 23;
+      let userInputCount = 0;
+      let viewedImages = new Set();
+      let allImageIndices = [];
+      let currentIndex = 0;
+      let remainingImages = [];
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function startSlideshow(count) {
+        userInputCount = count;
+
+        // 남은 이미지가 없다면 새로 시작
+        if (viewedImages.size === totalImages) {
+          alert("모든 이미지를 다 보셨습니다! 새로고침 해주세요.");
+          return;
+        }
+
+        // 전체 이미지 배열 생성
+        allImageIndices = Array.from({ length: totalImages }, (_, i) => i + 1);
+
+        // 남은 이미지 필터링
+        remainingImages = allImageIndices.filter((i) => !viewedImages.has(i));
+        shuffleArray(remainingImages);
+
+        // 남은 이미지가 선택한 수보다 적으면 조정
+        if (remainingImages.length < userInputCount) {
+          userInputCount = remainingImages.length;
+        }
+
+        currentIndex = 0;
+
+        // 화면 전환
+        document.getElementById("setup-screen").style.display = "none";
+        document.getElementById("slideshow").style.display = "flex";
+
+        document.getElementById("nextBtn").style.display = "inline-block";
+        document.getElementById("restartBtn").style.display = "none";
+        document.getElementById("nextBtn").disabled = false;
+        document.getElementById("message").textContent = "";
+
+        showNextImage();
+      }
+
+      function showNextImage() {
+        if (currentIndex >= userInputCount) {
+          document.getElementById("nextBtn").style.display = "none";
+          document.getElementById("restartBtn").style.display = "inline-block";
+          document.getElementById("message").textContent = `끝!`;
+          return;
+        }
+
+        const imageIndex = remainingImages[currentIndex];
+        document.getElementById(
+          "camping-image"
+        ).src = `images/${imageIndex}.png`;
+        viewedImages.add(imageIndex);
+        currentIndex++;
+        document.getElementById("message").textContent = "";
+      }
+
+      function startRemaining() {
+        // 다음 배치 시작
+        if (viewedImages.size === totalImages) {
+          document.getElementById("message").textContent =
+            "모든 이미지를 다 보셨습니다! 새로고침 해주세요.";
+          document.getElementById("restartBtn").style.display = "none";
+          return;
+        }
+
+        // 다음 배치도 같은 수로 보여주기
+        startSlideshow(userInputCount);
+      }
+    </script>
   </body>
 </html>
