@@ -12,12 +12,12 @@
   font-style: normal;
 }
 body {
-  overflow:hidden;
+  overflow: hidden;
   background: linear-gradient(135deg, #30ff48, #bfecc4);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin:0;
+  height: 100%;
 }
 
 .container {
@@ -25,7 +25,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 90vh;
+  height: 100vh;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -35,7 +35,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px; /* h1과 gif 사이 간격 */
-  margin-bottom: 80px;
+  margin-bottom: 100px;
 }
 
 /* 타이핑 애니메이션 */
@@ -63,7 +63,7 @@ body {
   display: inline-block;
   padding: 30px 150px;
   font-size: 6rem;
-  transform: translateY(20px);
+  transform: translateY(10px);
   text-decoration: none;
   border-radius: 30px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -169,12 +169,13 @@ body {
 }
 
 .wrapper {
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 90vh;
-  gap: 60px; /* 버튼 사이 간격 */
+  min-height: 100vh;
+  gap: 80px; /* 버튼 사이 간격 */
   animation: fadeIn 1.2s ease-out;
 }
 .logo-wrapper {
