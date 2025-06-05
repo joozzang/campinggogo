@@ -12,6 +12,7 @@
   font-style: normal;
 }
 body {
+  overflow:hidden;
   background: linear-gradient(135deg, #30ff48, #bfecc4);
   height: 100vh;
   display: flex;
