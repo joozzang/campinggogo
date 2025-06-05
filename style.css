@@ -1,0 +1,135 @@
+/* 전체 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: "DungGeunMo";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  background: linear-gradient(135deg, #30ff48, #bfecc4);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.title-wrapper {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* h1과 gif 사이 간격 */
+  margin-bottom: 80px;
+}
+
+/* 타이핑 애니메이션 */
+.title {
+  font-family: "DungGeunMo";
+  font-size: 18rem;
+  color: #f0f6ff;
+  display: inline-block;
+  white-space: nowrap; /* 한 줄로 유지 */
+  overflow: hidden;
+  border-right: 4px solid #374151; /* 커서 효과 */
+  width: 0;
+  animation: typing 2s steps(4, end) forwards, blinkCaret 0.7s step-end infinite;
+}
+
+.title-gif {
+  width: 200px; /* GIF 크기 조절 */
+  height: 200px;
+  rotate: 180deg;
+}
+.start-button {
+  opacity: 0;
+  pointer-events: none;
+  font-family: "DungGeunMo";
+  display: inline-block;
+  padding: 30px 150px;
+  font-size: 6rem;
+  background-color: #5c92c4;
+  transform: translateY(20px);
+  color: #374151;
+  text-decoration: none;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.5s ease;
+  animation: pulse 1.8s infinite;
+}
+
+/* 보이도록 하는 클래스 */
+.show-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.start-button:hover {
+  transform: scale(1.05);
+  background-color: #d0edaa;
+  box-shadow: 0 8px 20px rgba(208, 237, 170, 0.5);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    background-color: #ffff05; /* 선명한 레몬 옐로우 */
+    color: #374151; /* 진한 그레이(글자색) */
+  }
+  50% {
+    transform: scale(1.05);
+    background-color: #ffff05; /* 선명한 레몬 옐로우 */
+    color: #374151; /* 진한 그레이(글자색) */
+  }
+}
+
+/* 타이핑 애니메이션 구현 */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 4ch; /* 글자 수만큼 (GAME = 4글자) */
+  }
+}
+
+@keyframes blinkCaret {
+  0%,
+  100% {
+    border-color: #fff;
+  }
+  50% {
+    border-color: transparent;
+  }
+}
